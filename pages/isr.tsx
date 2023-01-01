@@ -17,7 +17,7 @@ export const getStaticProps: GetStaticProps = async () => {
     .from("notices")
     .select("*")
     .order("created_at", asc);
-  return { props: { tasks, notices }, revalidate: 500 };
+  return { props: { tasks, notices }, revalidate: 20 };
 };
 type StaticProps = {
   tasks: Task[];
