@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { supabase } from "../utils/supabase";
 
 export function reportWebVitals(metric: NextWebVitalsMetric) {
+  console.log(process.env.SUPABASE_KEY);
   switch (metric.name) {
     case "FCP":
       console.log(`FCP: ${Math.round(metric.value * 10) / 10}`);
@@ -40,7 +41,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { push, pathname } = useRouter();
 
   const validateSession = async () => {
-    const { data } = await supabase.auth.getUser();
+    const { data, error } = await supabase.auth.getUser();
+    console.log(error);
     const { user } = data;
     if (user === null) return;
     if (data.user.id && pathname === "/") {
