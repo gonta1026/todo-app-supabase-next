@@ -1,4 +1,4 @@
-import { FormEvent, FC } from "react";
+import { FormEvent, FC, useEffect } from "react";
 import { supabase } from "../utils/supabase";
 import useStore from "../store";
 import { useMutateTask } from "../hooks/useMutateTask";
@@ -7,12 +7,13 @@ export const TaskForm: FC = () => {
   const { editedTask } = useStore();
   const update = useStore((state) => state.updateEditedTask);
   const { createTaskMutation, updateTaskMutation } = useMutateTask();
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { data } = await supabase.auth.getUser();
     if (editedTask.id === "")
       createTaskMutation.mutate({
         title: editedTask.title,
-        user_id: supabase.auth.user()?.id,
+        user_id: data.user?.id,
       });
     else {
       updateTaskMutation.mutate({
@@ -22,6 +23,12 @@ export const TaskForm: FC = () => {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      // const res = await supabase.auth.get();
+      // const { user } = res.data;
+    })();
+  }, []);
   return (
     <form onSubmit={submitHandler}>
       <input
