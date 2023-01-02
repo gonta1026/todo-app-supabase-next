@@ -21,8 +21,6 @@ export const NoticeItem: FC<Omit<Notice, "created_at">> = ({
       setUserId(user.id);
     })();
   }, []);
-  // const userId = supabase.auth.user()?.id;
-  console.log(userId);
   return (
     <li className="my-3 text-lg font-extrabold">
       <span>{content}</span>
@@ -31,10 +29,7 @@ export const NoticeItem: FC<Omit<Notice, "created_at">> = ({
           <PencilAltIcon
             className="mx-1 h-5 w-5 cursor-pointer text-blue-500"
             onClick={() => {
-              update({
-                id: id,
-                content: content,
-              });
+              update({ id, content });
             }}
           />
           <TrashIcon
