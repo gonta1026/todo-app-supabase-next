@@ -12,7 +12,10 @@ export const useMutateAuth = () => {
 
   const loginMutation = useMutation(
     async () => {
-      const { error } = await supabase.auth.signIn({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       if (error) throw new Error(error.message);
     },
     {

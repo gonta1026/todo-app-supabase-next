@@ -1,11 +1,11 @@
-import { VFC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { PencilAltIcon, TrashIcon } from "@heroicons/react/solid";
 import useStore from "../store";
 import { useMutateNotice } from "../hooks/useMutateNotice";
 import { Notice } from "../types/types";
 
-export const NoticeItem: VFC<Omit<Notice, "created_at">> = ({
+export const NoticeItem: FC<Omit<Notice, "created_at">> = ({
   id,
   content,
   user_id,
@@ -14,7 +14,12 @@ export const NoticeItem: VFC<Omit<Notice, "created_at">> = ({
   const update = useStore((state) => state.updateEditedNotice);
   const { deleteNoticeMutation } = useMutateNotice();
   useEffect(() => {
-    setUserId(supabase.auth.user()?.id);
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      const { user } = data;
+      if (user === null) return;
+      setUserId(user.id);
+    })();
   }, []);
   // const userId = supabase.auth.user()?.id;
   console.log(userId);

@@ -7,12 +7,15 @@ export const NoticeForm: FC = () => {
   const { editedNotice } = useStore();
   const update = useStore((state) => state.updateEditedNotice);
   const { createNoticeMutation, updateNoticeMutation } = useMutateNotice();
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { data } = await supabase.auth.getUser();
+    const { user } = data;
+    if (user === null) return;
     if (editedNotice.id === "")
       createNoticeMutation.mutate({
         content: editedNotice.content,
-        user_id: supabase.auth.user()?.id,
+        user_id: user.id,
       });
     else {
       updateNoticeMutation.mutate({
